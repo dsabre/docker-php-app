@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db_test_container
+    env_file:
+      - variables.env
+    ports:
+      - "9906:3306"
+  web:
+    build: ./centos
+    container_name: web_test_container
+    depends_on:
+      - db
+    env_file:
+      - variables.env
+    volumes:
+      - ./app/:/app/
+    ports:
+      - "8315:8000"
+    command: php -S 0.0.0.0:8000 -t /app/public
+    stdin_open: true
+    tty: true

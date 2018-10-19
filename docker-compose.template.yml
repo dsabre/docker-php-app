@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db_${APP_NAME}
+    env_file:
+      - variables.env
+    ports:
+      - "${EXTERNAL_DB_PORT}:3306"
+  web:
+    build: ./centos
+    container_name: web_${APP_NAME}
+    depends_on:
+      - db
+    env_file:
+      - variables.env
+    volumes:
+      - ${APP_PATH}:/app/
+    ports:
+      - "${EXTERNAL_WEB_PORT}:8000"
+    command: php -S 0.0.0.0:8000 -t /app/public
+    stdin_open: true
+    tty: true

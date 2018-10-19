@@ -17,8 +17,16 @@ services:
       - variables.env
     volumes:
       - ${APP_PATH}:/app/
-    ports:
-      - "${EXTERNAL_WEB_PORT}:8000"
-    command: php -S 0.0.0.0:8000 -t /app/public
+    working_dir: /app
+    command: php -S 0.0.0.0:8000 -t public
+    networks:
+      frontend:
+          ipv4_address: 172.20.0.${IP_COUNTER}
     stdin_open: true
     tty: true
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
